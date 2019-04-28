@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour
                 //and that something is a dog
                 if (_myRaycastHit.transform.gameObject == GameObject.FindWithTag("isDog"))
                 {
+                    _myRaycastHit.transform.GetComponent<DogMovement>().lovesPlayer = true;
                     Debug.Log("You pet the dog!");
                 }
                 //if it's a human
