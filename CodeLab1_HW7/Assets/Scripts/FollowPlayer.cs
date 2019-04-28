@@ -7,13 +7,11 @@ public class FollowPlayer : MonoBehaviour
     public float speed = 1;
     
     GameObject player;
-    Rigidbody rb;
     
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -33,12 +31,10 @@ public class FollowPlayer : MonoBehaviour
         if (dotProduct > 0.2f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, newQuat, Time.deltaTime * speed);
-
-            rb.velocity = transform.forward * speed;
         }
         else
         {
-            rb.velocity = Vector3.zero;
+           
         }
     }
 }

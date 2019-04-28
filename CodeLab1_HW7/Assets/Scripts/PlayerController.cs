@@ -21,9 +21,13 @@ public class PlayerController : MonoBehaviour
 
     private string _tagStr;
 
+    public GameObject[] allDogs;
+    public GameObject[] allHumans;
+
     private void Start()
     {
-        
+        allDogs = GameObject.FindGameObjectsWithTag("isDog");
+        allHumans = GameObject.FindGameObjectsWithTag("isHuman");
     }
 
     // Update is called once per frame
@@ -91,21 +95,27 @@ public class PlayerController : MonoBehaviour
         {    
             //and ray is hitting something
             if (Physics.Raycast(_myRay, out _myRaycastHit, 1f))
-            {
-                //and that something is a dog
-                if (_myRaycastHit.transform.gameObject == GameObject.FindWithTag("isDog"))
-                {
-                    _myRaycastHit.transform.GetComponent<DogMovement>().lovesPlayer = true;
-                    Debug.Log("You pet the dog!");
+            {   
+                //for every Game Object in allDogs array
+                for (int i = 0; i < allDogs.Length; i++)
+                {   
+                    //if the Game Object clicked is a Game Object in the allDogs array
+                    if (_myRaycastHit.transform.gameObject == allDogs[i])
+                    {
+                        //now you've successfully pet the dog and it loves you, therefore it should stop running around
+                        _myRaycastHit.transform.GetComponent<DogMovement>().lovesPlayer = true;
+                        Debug.Log("You pet the dog!");
+                    }
                 }
-                //if it's a human
-                if (_myRaycastHit.transform.gameObject == GameObject.FindWithTag("isHuman"))
-                {
-                    Debug.Log("You pet the human! They seem confused.");
-                }
-                else
-                {
-                    Debug.Log("There's nothing to pet here!");
+                //for every Game Object in allHumans array
+                for (int i = 0; i < allHumans.Length; i++)
+                {    
+                    //if the Game Object clicked is a Game Object in the allHumans array
+                    if (_myRaycastHit.transform.gameObject == allHumans[i])
+                    {
+                        //now you've pet the human
+                        Debug.Log("You pet the human! They seem confused.");
+                    }
                 }
             }
         }
