@@ -16,12 +16,22 @@ public class PlayerController : MonoBehaviour
     public KeyCode leftKey;
     public KeyCode rightKey;
     public KeyCode jumpKey;
+    
+    private Ray _myRay;
+
+    private string _tagStr;
+
+    private void Start()
+    {
+        
+    }
 
     // Update is called once per frame
     void Update()
     {
         RotateCamera();
         TranslateCamera();
+        Pet();
     }
 
     private void RotateCamera()
@@ -64,6 +74,39 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(jumpKey))
         {
             transform.Translate(Vector3.up * speedMultiplier * Time.deltaTime);
+        }
+    }
+    
+    void Pet()
+    {
+        //initialize ray from camera/player
+        _myRay = new Ray(transform.position, transform.forward);
+        Debug.DrawRay(_myRay.origin, _myRay.direction * 1f, Color.cyan);
+        
+        //initialize raycastHit
+        RaycastHit _myRaycastHit = new RaycastHit();
+        
+        //if left click
+        if (Input.GetMouseButtonDown(0))
+        {    
+            //and ray is hitting something
+            if (Physics.Raycast(_myRay, out _myRaycastHit, 1f))
+            {
+                //and that something is a dog
+                if (_myRaycastHit.transform.gameObject == GameObject.FindWithTag("isDog"))
+                {
+                    Debug.Log("You pet the dog!");
+                }
+                //if it's a human
+                if (_myRaycastHit.transform.gameObject == GameObject.FindWithTag("isHuman"))
+                {
+                    Debug.Log("You pet the human! They seem confused.");
+                }
+                else
+                {
+                    Debug.Log("There's nothing to pet here!");
+                }
+            }
         }
     }
 }
