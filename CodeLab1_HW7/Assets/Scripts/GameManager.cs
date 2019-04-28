@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = false;
+        
         for (int i = 0; i < 30; i++)
         {
             PairSpawn();

@@ -28,13 +28,9 @@ public class FollowPlayer : MonoBehaviour
         Debug.DrawRay(transform.position, transform.forward * 5, Color.cyan);
         Debug.DrawRay(transform.position, direction * 5, Color.green);
 
-        if (dotProduct > 0.2f)
+        if (dotProduct > 0.15f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, newQuat, Time.deltaTime * speed);
-        }
-        else
-        {
-           
         }
     }
 }
