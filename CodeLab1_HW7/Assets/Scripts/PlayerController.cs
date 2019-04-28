@@ -104,6 +104,8 @@ public class PlayerController : MonoBehaviour
                     {
                         //now you've successfully pet the dog and it loves you, therefore it should stop running around
                         _myRaycastHit.transform.GetComponent<DogMovement>().lovesPlayer = true;
+                        ParticleSystem heartParticles = _myRaycastHit.transform.GetChild(4).GetComponent<ParticleSystem>();
+                        heartParticles.Play();
                         Debug.Log("You pet the dog!");
                     }
                 }
