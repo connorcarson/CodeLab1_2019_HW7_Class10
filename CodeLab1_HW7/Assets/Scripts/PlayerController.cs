@@ -21,13 +21,11 @@ public class PlayerController : MonoBehaviour
 
     private string _tagStr;
 
-    public GameObject[] allDogs;
-    public GameObject[] allHumans;
+    public bool isPetting = false;
 
-    private void Start()
-    {
-        allDogs = GameObject.FindGameObjectsWithTag("isDog");
-        allHumans = GameObject.FindGameObjectsWithTag("isHuman");
+    void Start()
+    {        
+
     }
 
     // Update is called once per frame
@@ -35,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         RotateCamera();
         TranslateCamera();
-        Pet();
+        StartCoroutine(Pet());
     }
 
     private void RotateCamera()
@@ -81,39 +79,45 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    void Pet()
+    IEnumerator Pet()
     {
         //initialize ray from camera/player
         _myRay = new Ray(transform.position, transform.forward);
         Debug.DrawRay(_myRay.origin, _myRay.direction * 1f, Color.cyan);
         
         //initialize raycastHit
-        RaycastHit _myRaycastHit = new RaycastHit();
+        RaycastHit myRaycastHit = new RaycastHit();
         
-        //if left click
-        if (Input.GetMouseButtonDown(0))
-        {    
+ 
             //and ray is hitting something
-            if (Physics.Raycast(_myRay, out _myRaycastHit, 1f))
+        if (Physics.Raycast(_myRay, out myRaycastHit, 1f))
+        {   
+            //for every Game Object in allDogs array
+            for (int i = 0; i < GameManager.instance.allDogs.Length; i++)
             {   
-                //for every Game Object in allDogs array
-                for (int i = 0; i < allDogs.Length; i++)
-                {   
-                    //if the Game Object clicked is a Game Object in the allDogs array
-                    if (_myRaycastHit.transform.gameObject == allDogs[i])
+                //if the Game Object is a Game Object in the allDogs array
+                if (myRaycastHit.transform.gameObject == GameManager.instance.allDogs[i])
+                { 
+                    //and the player clicks that game object
+                    if (Input.GetMouseButtonDown(0))
                     {
                         //now you've successfully pet the dog and it loves you, therefore it should stop running around
-                        _myRaycastHit.transform.GetComponent<DogMovement>().lovesPlayer = true;
-                        ParticleSystem heartParticles = _myRaycastHit.transform.GetChild(4).GetComponent<ParticleSystem>();
+                        isPetting = true;
+                        myRaycastHit.transform.GetComponent<DogMovement>().lovesPlayer = true;
+                        ParticleSystem heartParticles =
+                            myRaycastHit.transform.GetChild(4).GetComponent<ParticleSystem>();
                         heartParticles.Play();
                         Debug.Log("You pet the dog!");
                     }
                 }
-                //for every Game Object in allHumans array
-                for (int i = 0; i < allHumans.Length; i++)
-                {    
-                    //if the Game Object clicked is a Game Object in the allHumans array
-                    if (_myRaycastHit.transform.gameObject == allHumans[i])
+            }
+            //for every Game Object in allHumans array
+            for (int i = 0; i < GameManager.instance.allHumans.Length; i++)
+            {                    
+                //if the Game Object is a Game Object in the allHumans array
+                if (myRaycastHit.transform.gameObject == GameManager.instance.allHumans[i])
+                {
+                    if (Input.GetMouseButtonDown(0))
                     {
                         //now you've pet the human
                         Debug.Log("You pet the human! They seem confused.");
@@ -121,5 +125,9 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        
+        yield return new WaitForSeconds(2f);
+
+        isPetting = false;
     }
 }
